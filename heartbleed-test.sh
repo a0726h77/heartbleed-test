@@ -1,6 +1,7 @@
 #!/bin/bash
 
-INPUT=websites
+# INPUT=websites
+INPUT=$1
 while read website
 do
     echo "checking $website ..."

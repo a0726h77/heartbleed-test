@@ -1,1 +1,3 @@
-> sh heartbleed-test.sh | tee -a output
+```
+$ sh heartbleed-test.sh websites | tee -a output
+```
